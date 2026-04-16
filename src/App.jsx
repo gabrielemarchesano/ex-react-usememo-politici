@@ -1,6 +1,22 @@
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
-function App() {
+const PoliticianCard = React.memo(({ image, name, position, biography }) => {
+  console.log("Render")
+  return (
+    <div className="card">
+      <div className="card-image">
+        <img src={image} alt={name} style={{ width: 300, borderRadius: 3 }} />
+      </div>
+      <div className="card-body">
+        <h3>{name}</h3>
+        <p><strong>{position}</strong></p>
+        <p>{biography}</p>
+      </div>
+    </div>
+  )
+})
+
+function App(){
 
   const [ politicians, setPoliticians ] = useState([]);
   const [ search, setSearch ] = useState("");
@@ -26,16 +42,7 @@ function App() {
       />
       {
         filteredPolitician.map(politician => (
-          <div className="card" key={politician.id}>
-            <div className="card-image">
-              <img src={politician.image} alt={politician.name} style={{width: 300, borderRadius: 3}}/>
-            </div>
-            <div className="card-body">
-              <h3>{politician.name}</h3>
-              <p><strong>{politician.position}</strong></p>
-              <p>{politician.biography}</p>
-            </div>
-          </div>
+          <PoliticianCard key={politician.id} {...politician} />
         ))
       }
     </>
