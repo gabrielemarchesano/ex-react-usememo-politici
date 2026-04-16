@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 function App() {
 
   const [ politicians, setPoliticians ] = useState([]);
+  const [ search, setSearch ] = useState("");
 
   useEffect(() => {
     fetch("http://localhost:3333/politicians")
@@ -11,10 +12,20 @@ function App() {
       .catch(error => console.error(error))
   }, [])
 
+  const filteredPolitician = useMemo(() => {
+    return politicians.filter(politician => politician.name.toLowerCase().includes(search.toLowerCase()) || politician.biography.toLowerCase().includes(search.toLowerCase()));
+  }, [politicians, search])
+
   return (
     <>
+      <input 
+        type="text"
+        onChange={event => setSearch(event.target.value)}
+        value={search}
+        placeholder="Cerca..."
+      />
       {
-        politicians.map(politician => (
+        filteredPolitician.map(politician => (
           <div className="card" key={politician.id}>
             <div className="card-image">
               <img src={politician.image} alt={politician.name} style={{width: 300, borderRadius: 3}}/>
